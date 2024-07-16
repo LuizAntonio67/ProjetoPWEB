@@ -1,4 +1,4 @@
-# ProjetoPWEB - Loja de Baterias
+# Loja de Baterias
 
 Repositório para o backend de uma loja de baterias automotivas. 
 
