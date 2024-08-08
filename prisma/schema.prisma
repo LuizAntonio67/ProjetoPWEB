@@ -12,3 +12,82 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model Client {
+  id        String   @id @default(uuid())
+  role      Role     @default(USER)
+  name      String
+  cpf       String   @unique
+  email     String   @unique
+  phone     String
+  password  String
+  createdAt DateTime @default(now())
+
+  Cart Cart?
+  Order Order[]
+  History History?
+
+  @@map("clients")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  category    String
+  price       Float
+
+  Catalog Catalog @relation(fields: [catalogId], references: [id])
+  catalogId   String   @unique
+  Cart Cart[]
+
+  @@map("products")
+}
+
+model Catalog {
+  id        String   @id @default(uuid())
+  name      String
+  products  Product[]
+
+  @@map("catalogs")
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  address   String
+
+  client    Client   @relation(fields: [clientId], references: [id])
+  clientId  String   @unique
+  products  Product[]
+  Order Order?
+
+  @@map("carts")
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  client    Client   @relation(fields: [clientId], references: [id])
+  clientId  String   @unique
+  Cart      Cart     @relation(fields: [cartId], references: [id])
+  cartId    String   @unique
+  History   History  @relation(fields: [historyId], references: [id])
+  historyId String   @unique
+
+  @@map("orders")
+}
+
+model History {
+  id        String   @id @default(uuid())
+  client    Client   @relation(fields: [clientId], references: [id])
+  clientId  String   @unique
+  Order     Order[]
+
+  @@map("histories")
+}
