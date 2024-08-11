@@ -8,7 +8,7 @@ const app = (0, express_1.default)();
 const port = 3000;
 app.use(express_1.default.json());
 app.get('/', (req, res) => {
-    res.send('Hello, world!3');
+    res.send('Hello, world!');
 });
 // Get user by id
 app.get('/user/:id', (req, res) => {

@@ -15,12 +15,12 @@ datasource db {
 
 enum Role {
   ADMIN
-  USER
+  CLIENT
 }
 
-model Client {
+model User {
   id        String   @id @default(uuid())
-  role      Role     @default(USER)
+  role      Role     @default(CLIENT)
   name      String
   cpf       String   @unique
   email     String   @unique
@@ -32,7 +32,7 @@ model Client {
   Order Order[]
   History History?
 
-  @@map("clients")
+  @@map("users")
 }
 
 model Product {
@@ -61,8 +61,8 @@ model Cart {
   id        String   @id @default(uuid())
   address   String
 
-  client    Client   @relation(fields: [clientId], references: [id])
-  clientId  String   @unique
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String   @unique
   products  Product[]
   Order Order?
 
@@ -73,8 +73,8 @@ model Order {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
 
-  client    Client   @relation(fields: [clientId], references: [id])
-  clientId  String   @unique
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String   @unique
   Cart      Cart     @relation(fields: [cartId], references: [id])
   cartId    String   @unique
   History   History  @relation(fields: [historyId], references: [id])
@@ -85,8 +85,8 @@ model Order {
 
 model History {
   id        String   @id @default(uuid())
-  client    Client   @relation(fields: [clientId], references: [id])
-  clientId  String   @unique
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String   @unique
   Order     Order[]
 
   @@map("histories")
